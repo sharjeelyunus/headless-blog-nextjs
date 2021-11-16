@@ -1,21 +1,22 @@
 import styles from '../styles/Home.module.scss';
-
+import Link from 'next/link';
 const BLOG_URL = 'https://next-ghostcms-backend.herokuapp.com/';
 const CONTENT_API_KEY = '6a57a95994a114e1b11e0c60d5';
 
-type Post = {};
+type Post = {
+  title: string;
+  slug: string;
+};
 
 async function getPosts() {
   //curl ""
   const res = await fetch(
-    `${BLOG_URL}/ghost/api/v3/content/posts/?key=${CONTENT_API_KEY}`
+    `${BLOG_URL}/ghost/api/v3/content/posts/?key=${CONTENT_API_KEY}&fields=title,slug,custom_excerpt`
   ).then((res) => res.json());
 
-  const titles = res.posts.map((post) => post.title);
+  const posts = res.posts;
 
-  console.log(titles);
-
-  return titles;
+  return posts;
 }
 
 export const getStaticProps = async ({ params }) => {
@@ -25,7 +26,7 @@ export const getStaticProps = async ({ params }) => {
   };
 };
 
-const Home: React.FC<{ posts: string[] }> = (props) => {
+const Home: React.FC<{ posts: Post[] }> = (props) => {
   const { posts } = props;
 
   return (
@@ -33,7 +34,13 @@ const Home: React.FC<{ posts: string[] }> = (props) => {
       <h1>Hello to my Blog</h1>
       <ul>
         {posts.map((post, index) => {
-          return <li key={index}>{post}</li>;
+          return (
+            <li key={post.slug}>
+              <Link href='/post/[slug]' as={`/post/${post.slug}`}>
+                <a href=''>{post.title}</a>
+              </Link>
+            </li>
+          );
         })}
       </ul>
     </div>
