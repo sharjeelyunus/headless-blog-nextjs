@@ -2,9 +2,22 @@
   min-height: 100vh;
   padding: 0 0.5rem;
   display: flex;
+  width: 960px;
+  margin: 0 auto;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.postitem {
+  padding: 10px 0;
+}
+
+.goback {
+  text-align: left;
+  align-self: start;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 .main {

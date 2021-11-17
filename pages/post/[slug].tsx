@@ -1,5 +1,6 @@
 import { useRouter } from 'next/dist/client/router';
 import Link from 'next/link';
+import { useState } from 'react';
 import styles from '../../styles/Home.module.scss';
 const { BLOG_URL, CONTENT_API_KEY } = process.env;
 
@@ -39,6 +40,7 @@ const Post: React.FC<{ post: Post }> = (props) => {
   console.log(props);
 
   const { post } = props;
+  const [enableLoadComments, setEnableLoadComments] = useState<boolean>(true);
 
   const router = useRouter();
 
@@ -46,13 +48,35 @@ const Post: React.FC<{ post: Post }> = (props) => {
     return <h1>Loading...</h1>;
   }
 
+  function loadComments() {
+    setEnableLoadComments(false);
+    (window as any).disqus_config = function () {
+      this.page.url = window.location.href;
+      this.page.identifier = post.slug;
+    };
+
+    const script = document.createElement('script');
+    script.src = 'https://headless-blog-nextjs.disqus.com/embed.js';
+    script.setAttribute('data-timestamp', Date.now().toString());
+
+    document.body.appendChild(script);
+  }
+
   return (
     <div className={styles.container}>
       <Link href='/'>
-        <a>Go Back</a>
+        <a className={styles.goback}>Go Back</a>
       </Link>
       <h1>{post.title}</h1>
       <div dangerouslySetInnerHTML={{ __html: post.html }}></div>
+
+      {enableLoadComments && (
+        <p className={styles.goback} onClick={loadComments}>
+          Load Comments
+        </p>
+      )}
+
+      <div id='disqus_thread'></div>
     </div>
   );
 };
