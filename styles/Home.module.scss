@@ -9,8 +9,29 @@
   align-items: center;
 }
 
+.postList {
+  display: grid;
+  grid-template-columns: 300px 300px 300px;
+  grid-gap: 20px;
+}
+
 .postitem {
   padding: 10px 0;
+}
+
+.posts {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #333333;
+}
+
+.posts > a {
+  margin-top: 10px;
+  font-weight: bold;
 }
 
 .goback {
